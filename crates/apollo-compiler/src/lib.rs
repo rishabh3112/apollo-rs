@@ -3,6 +3,7 @@
 #[macro_use]
 mod macros;
 pub mod ast;
+pub mod coordinate;
 mod database;
 mod diagnostics;
 pub mod executable;
