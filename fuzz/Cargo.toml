@@ -42,3 +42,9 @@ name = "reparse"
 path = "fuzz_targets/reparse.rs"
 test = false
 doc = false
+
+[[bin]]
+name = "coordinate"
+path = "fuzz_targets/coordinate.rs"
+test = false
+doc = false
