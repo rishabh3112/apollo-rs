@@ -499,7 +499,7 @@ impl ApolloDiagnostic {
                 )
             }
             DiagnosticData::TransitiveImplementedInterfaces {
-                interface,
+                interface: _,
                 via_interface,
                 transitive_interface_location,
                 missing_interface,
