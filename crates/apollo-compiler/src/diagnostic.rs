@@ -212,8 +212,7 @@ impl<T: ToDiagnostic> Diagnostic<T> {
     ///
     /// [`Write`]: std::io::Write
     pub fn write(&self, w: impl std::io::Write) -> std::io::Result<()> {
-        let report = self.error.report(self.sources.clone());
-        report.write(w)
+        self.error.report(self.sources.clone()).write(w)
     }
 }
 
