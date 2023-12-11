@@ -444,7 +444,7 @@ impl ValidationError {
             }
             DiagnosticData::RecursiveDirectiveDefinition { name, trace } => {
                 report.with_label_opt(self.location, "recursive directive definition");
-                label_recursive_trace(&mut report, trace, &name, |directive| &directive.name);
+                label_recursive_trace(&mut report, trace, name, |directive| &directive.name);
             }
             DiagnosticData::RecursiveInterfaceDefinition { name } => {
                 report.with_label_opt(
@@ -454,7 +454,7 @@ impl ValidationError {
             }
             DiagnosticData::RecursiveInputObjectDefinition { name, trace } => {
                 report.with_label_opt(self.location, "cyclical input object definition");
-                label_recursive_trace(&mut report, trace, &name, |reference| &reference.name);
+                label_recursive_trace(&mut report, trace, name, |reference| &reference.name);
             }
             DiagnosticData::RecursiveFragmentDefinition {
                 head_location,
@@ -465,7 +465,7 @@ impl ValidationError {
                     head_location.or(self.location),
                     "recursive fragment definition",
                 );
-                label_recursive_trace(&mut report, trace, &name, |reference| {
+                label_recursive_trace(&mut report, trace, name, |reference| {
                     &reference.fragment_name
                 });
             }
