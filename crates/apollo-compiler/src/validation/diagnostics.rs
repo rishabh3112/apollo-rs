@@ -6,7 +6,6 @@ use crate::ast::Value;
 use crate::diagnostic::DiagnosticReport;
 use crate::validation::NodeLocation;
 use crate::Node;
-use crate::SourceMap;
 use std::fmt;
 use thiserror::Error;
 
@@ -319,10 +318,8 @@ pub(crate) enum DiagnosticData {
 }
 
 impl ValidationError {
-    pub(crate) fn to_report(&self, sources: SourceMap) -> DiagnosticReport {
-        let mut report = DiagnosticReport::builder(sources, self.location);
+    pub(crate) fn report(&self, report: &mut DiagnosticReport) {
         report.with_message(&self.data);
-
         match &*self.data {
             DiagnosticData::UniqueVariable {
                 name,
@@ -444,7 +441,7 @@ impl ValidationError {
             }
             DiagnosticData::RecursiveDirectiveDefinition { name, trace } => {
                 report.with_label_opt(self.location, "recursive directive definition");
-                label_recursive_trace(&mut report, trace, name, |directive| &directive.name);
+                label_recursive_trace(report, trace, name, |directive| &directive.name);
             }
             DiagnosticData::RecursiveInterfaceDefinition { name } => {
                 report.with_label_opt(
@@ -454,7 +451,7 @@ impl ValidationError {
             }
             DiagnosticData::RecursiveInputObjectDefinition { name, trace } => {
                 report.with_label_opt(self.location, "cyclical input object definition");
-                label_recursive_trace(&mut report, trace, name, |reference| &reference.name);
+                label_recursive_trace(report, trace, name, |reference| &reference.name);
             }
             DiagnosticData::RecursiveFragmentDefinition {
                 head_location,
@@ -465,9 +462,7 @@ impl ValidationError {
                     head_location.or(self.location),
                     "recursive fragment definition",
                 );
-                label_recursive_trace(&mut report, trace, name, |reference| {
-                    &reference.fragment_name
-                });
+                label_recursive_trace(report, trace, name, |reference| &reference.fragment_name);
             }
             DiagnosticData::DeeplyNestedType { ty, .. } => {
                 report.with_label_opt(
@@ -764,7 +759,6 @@ impl ValidationError {
             }
             DiagnosticData::RecursionError {} => {}
         }
-        report
     }
 }
 
